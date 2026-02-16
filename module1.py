@@ -11,7 +11,6 @@ def clean_text(text):
     text=re.sub(r"https\S+","",text)
     text=re.sub(r"\d+","",text)
     text=text.translate(str.maketrans("","",string.punctuation))
-    text=re.sub(r"\s+","",text).strip()
     words=[W for W in text.split() if W not in STOPWORDS]
     return " ".join(words)
 
