@@ -6,7 +6,6 @@ from datetime import datetime
 from wordcloud import WordCloud
 import numpy as np
  
-# Page configuration [cite: 9]
 st.set_page_config(
     page_title="ReviewSense Dashboard",
     page_icon="M",
@@ -14,7 +13,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
  
-# Custom CSS for better look [cite: 9]
 st.markdown("""
 <style>
 .main-header {
@@ -33,20 +31,15 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
  
-# Load Data [cite: 10]
 @st.cache_data
 def load_data():
-    # Primary Input: Module2_Sentiment_Results_new.csv [cite: 4]
     df = pd.read_csv("Module2_Sentiment_Results_new.csv")
-    # Convert date to datetime [cite: 10]
     df['date'] = pd.to_datetime(df['date'], errors='coerce')
-    # Convert sentiment to title case for consistency [cite: 10]
     df['sentiment'] = df['sentiment'].str.capitalize()
     return df
  
 @st.cache_data
 def load_keywords():
-    # Secondary Input: Module3_Keyword_Insights.csv [cite: 4, 10]
     try:
         keywords_df = pd.read_csv("Module3_Keyword_Insights.csv")
         return keywords_df
@@ -56,25 +49,21 @@ def load_keywords():
 df = load_data()
 keywords_df = load_keywords()
  
-# Sidebar Filters [cite: 10]
-st.sidebar.header("🔍 Filters")
+st.sidebar.header("Filters")
  
-# Sentiment Filter
 sentiment_filter = st.sidebar.multiselect(
     "Select Sentiment",
     options=["Positive", "Negative", "Neutral"],
     default=["Positive", "Negative", "Neutral"]
 )
  
-# Product Filter [cite: 10, 11]
 product_filter = st.sidebar.multiselect(
     "Select Product",
     options=sorted(df["product"].unique()),
     default=sorted(df["product"].unique())
 )
  
-# Date Range Filter [cite: 11]
-st.sidebar.subheader("📅 Date Range")
+st.sidebar.subheader("Date Range")
 if pd.notna(df['date'].min()):
     default_start = df['date'].min().date()
 else:
@@ -89,7 +78,6 @@ col1_sb, col2_sb = st.sidebar.columns(2)
 start_date = col1_sb.date_input("Start Date", value=default_start)
 end_date = col2_sb.date_input("End Date", value=default_end)
  
-# Apply Filters [cite: 11]
 filtered_df = df[
     (df["sentiment"].isin(sentiment_filter)) &
     (df["product"].isin(product_filter)) &
@@ -97,10 +85,8 @@ filtered_df = df[
     (df["date"] <= pd.to_datetime(end_date))
 ].copy()
  
-# Main Dashboard Header [cite: 11]
 st.markdown('<h1 class="main-header">ReviewSense Customer Feedback Dashboard</h1>', unsafe_allow_html=True)
- 
-# Key Metrics [cite: 11, 12, 13]
+
 col1, col2, col3, col4 = st.columns(4)
 total_reviews = len(filtered_df)
 pos_count = len(filtered_df[filtered_df['sentiment'] == 'Positive'])
@@ -131,8 +117,8 @@ with col4:
     st.metric("Neutral", f"{neu_pct:.1f}%", delta=f"{neu_count} reviews")
     st.markdown('</div>', unsafe_allow_html=True)
  
-# Sentiment Distribution [cite: 13]
-st.subheader("📊 Sentiment Distribution")
+
+st.subheader("Sentiment Distribution")
 if not filtered_df.empty:
     fig1, ax1 = plt.subplots(figsize=(8,5))
     counts = filtered_df["sentiment"].value_counts()
@@ -148,8 +134,7 @@ if not filtered_df.empty:
 else:
     st.info("No data matches the selected filters.")
  
-# Product Sentiment Table & Heatmap [cite: 13, 14]
-st.subheader("📦 Product-wise Sentiment")
+st.subheader("Product-wise Sentiment")
 if not filtered_df.empty:
     product_sent = (
         filtered_df.groupby('product')['sentiment']
@@ -161,8 +146,7 @@ if not filtered_df.empty:
     product_sent = product_sent.sort_values('Positive %', ascending=False)
    
     st.dataframe(product_sent.style.format(precision=1), use_container_width=True)
- 
-    # Heatmap visualization
+
     fig_hm, ax_hm = plt.subplots(figsize=(10,6))
     sns.heatmap(
         product_sent[['Positive', 'Negative', 'Neutral']],
@@ -174,8 +158,7 @@ if not filtered_df.empty:
     ax_hm.set_title("Product Sentiment Heatmap")
     st.pyplot(fig_hm)
  
-# Trend Over Time [cite: 14]
-st.subheader("📈 Sentiment Trends Over Time")
+st.subheader("Sentiment Trends Over Time")
 if not filtered_df.empty:
     filtered_df['month'] = filtered_df['date'].dt.to_period('M')
     trend = filtered_df.groupby(['month', 'sentiment']).size().unstack(fill_value=0)
@@ -199,7 +182,6 @@ if not filtered_df.empty:
 else:
     st.info("No date-based data available after filtering.")
  
-# Keywords & Word Cloud [cite: 15]
 st.subheader("🔠 Top Keywords & Word Cloud")
 if not keywords_df.empty:
     top10 = keywords_df.head(15)
@@ -226,8 +208,7 @@ if not keywords_df.empty:
             ax_wc.axis('off')
             st.pyplot(fig_wc)
  
-# Confidence Score Distribution [cite: 15]
-st.subheader("🎯 Confidence Score Distribution")
+st.subheader("Confidence Score Distribution")
 if not filtered_df.empty:
     fig_hist, ax_hist = plt.subplots(figsize=(10,5))
     ax_hist.hist(filtered_df["confidence_score"], bins=25, color='cornflowerblue', edgecolor='black', alpha=0.7)
@@ -236,11 +217,10 @@ if not filtered_df.empty:
     ax_hist.set_title("Sentiment Confidence Distribution")
     st.pyplot(fig_hist)
  
-# Data Preview & Export Options [cite: 15, 16]
-with st.expander("📄 Preview Filtered Data (first 15 rows)"):
+with st.expander("Preview Filtered Data (first 15 rows)"):
     st.dataframe(filtered_df.head(15), use_container_width=True)
  
-st.subheader("📥 Export Options")
+st.subheader("Export Options")
 col_dl1, col_dl2 = st.columns(2)
  
 with col_dl1:
