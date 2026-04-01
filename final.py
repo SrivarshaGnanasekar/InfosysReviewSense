@@ -9,17 +9,13 @@ import numpy as np
 import sqlite3
 from textblob import TextBlob
 
-# -------------------- CONFIG --------------------
 st.set_page_config(
     page_title="ReviewSense • AI Feedback Intelligence",
     page_icon="◈",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
-# ─────────────────────────────────────────────
-# THEME TOGGLE
-# ─────────────────────────────────────────────
 if "theme" not in st.session_state:
     st.session_state.theme = "dark"
 
@@ -49,12 +45,10 @@ def apply_theme():
     """, unsafe_allow_html=True)
 
 apply_theme()
-# -------------------- GLOBAL STYLES --------------------
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
 
-/* ── Reset & Base ── */
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, [class*="css"] {
@@ -69,12 +63,10 @@ html, body, [class*="css"] {
 
 [data-testid="stHeader"] { background: transparent; }
 
-/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #0D1120; }
 ::-webkit-scrollbar-thumb { background: #2A3556; border-radius: 2px; }
 
-/* ── Sidebar ── */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0D1120 0%, #0A0F1E 100%);
     border-right: 1px solid rgba(99,120,195,0.15);
@@ -116,7 +108,6 @@ html, body, [class*="css"] {
     margin-top: -2px;
 }
 
-/* ── Sidebar Radio ── */
 [data-testid="stRadio"] > div {
     gap: 6px !important;
     flex-direction: column;
@@ -139,7 +130,6 @@ html, body, [class*="css"] {
     color: #E8EAF0 !important;
 }
 
-/* ── Buttons ── */
 .stButton > button {
     background: linear-gradient(135deg, #4F6EF7 0%, #9B5CF6 100%);
     color: white;
@@ -162,7 +152,6 @@ html, body, [class*="css"] {
 
 .stButton > button:active { transform: translateY(0); }
 
-/* ── Inputs ── */
 .stTextInput input, .stTextArea textarea {
     background: #111827 !important;
     border: 1px solid rgba(99,120,195,0.25) !important;
@@ -179,7 +168,6 @@ html, body, [class*="css"] {
     box-shadow: 0 0 0 3px rgba(79,110,247,0.12) !important;
 }
 
-/* ── Metrics ── */
 [data-testid="stMetric"] {
     background: #0F1526;
     border: 1px solid rgba(99,120,195,0.15);
@@ -225,7 +213,6 @@ html, body, [class*="css"] {
     color: #6378C3 !important;
 }
 
-/* ── Tabs ── */
 .stTabs [data-baseweb="tab-list"] {
     background: #0D1120 !important;
     border-radius: 10px !important;
@@ -249,14 +236,12 @@ html, body, [class*="css"] {
     color: white !important;
 }
 
-/* ── Dataframe ── */
 [data-testid="stDataFrame"] {
     border: 1px solid rgba(99,120,195,0.15) !important;
     border-radius: 12px !important;
     overflow: hidden;
 }
 
-/* ── Expander ── */
 .streamlit-expanderHeader {
     background: #0F1526 !important;
     border: 1px solid rgba(99,120,195,0.15) !important;
@@ -266,7 +251,6 @@ html, body, [class*="css"] {
     color: #8B93B8 !important;
 }
 
-/* ── Select ── */
 [data-testid="stMultiSelect"] > div > div,
 [data-testid="stSelectbox"] > div > div {
     background: #111827 !important;
@@ -275,7 +259,6 @@ html, body, [class*="css"] {
     color: #E8EAF0 !important;
 }
 
-/* ── Download Button ── */
 [data-testid="stDownloadButton"] > button {
     background: transparent !important;
     border: 1px solid rgba(79,110,247,0.4) !important;
@@ -291,7 +274,6 @@ html, body, [class*="css"] {
     transform: translateY(-1px) !important;
 }
 
-/* ── Chart containers ── */
 .chart-card {
     background: #0F1526;
     border: 1px solid rgba(99,120,195,0.15);
@@ -300,7 +282,6 @@ html, body, [class*="css"] {
     margin-bottom: 1.5rem;
 }
 
-/* ── Section headers ── */
 .section-header {
     font-family: 'Syne', sans-serif;
     font-size: 1.05rem;
@@ -321,13 +302,11 @@ html, body, [class*="css"] {
     margin-left: 8px;
 }
 
-/* ── Alert / Success ── */
 .stAlert {
     border-radius: 10px !important;
     font-size: 0.875rem !important;
 }
 
-/* ── Sidebar filter labels ── */
 .sidebar-filter-label {
     font-size: 0.7rem;
     font-weight: 600;
@@ -338,7 +317,6 @@ html, body, [class*="css"] {
     display: block;
 }
 
-/* ── Page title block ── */
 .page-title-block {
     margin-bottom: 2.5rem;
 }
@@ -360,7 +338,6 @@ html, body, [class*="css"] {
     font-weight: 300;
 }
 
-/* ── Sentiment badge ── */
 .sentiment-badge {
     display: inline-flex;
     align-items: center;
@@ -376,7 +353,6 @@ html, body, [class*="css"] {
 .badge-negative { background: rgba(239,68,68,0.12); color: #F87171; border: 1px solid rgba(239,68,68,0.25); }
 .badge-neutral  { background: rgba(148,163,184,0.12); color: #94A3B8; border: 1px solid rgba(148,163,184,0.25); }
 
-/* ── Stat row ── */
 .stat-row {
     display: flex;
     gap: 12px;
@@ -408,7 +384,6 @@ html, body, [class*="css"] {
     font-weight: 500;
 }
 
-/* ── Login card ── */
 .auth-card {
     background: #0F1526;
     border: 1px solid rgba(99,120,195,0.2);
@@ -417,7 +392,6 @@ html, body, [class*="css"] {
     box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(79,110,247,0.05);
 }
 
-/* ── Landing hero ── */
 .hero-block {
     background: linear-gradient(135deg, #0D1528 0%, #111E40 50%, #0D1528 100%);
     border: 1px solid rgba(79,110,247,0.2);
@@ -479,7 +453,6 @@ html, body, [class*="css"] {
     line-height: 1.6;
 }
 
-/* ── Feature cards ── */
 .feature-card {
     background: #0F1526;
     border: 1px solid rgba(99,120,195,0.15);
@@ -531,7 +504,6 @@ html, body, [class*="css"] {
     margin: 0;
 }
 
-/* ── User avatar chip ── */
 .user-chip {
     display: flex;
     align-items: center;
@@ -567,7 +539,6 @@ html, body, [class*="css"] {
     letter-spacing: 0.08em;
 }
 
-/* ── Insight row ── */
 .insight-card {
     background: #0F1526;
     border: 1px solid rgba(99,120,195,0.15);
@@ -592,7 +563,6 @@ html, body, [class*="css"] {
     color: #6378C3;
 }
 
-/* ── Progress bar ── */
 .progress-container { margin: 0.5rem 0; }
 .progress-label {
     display: flex;
@@ -613,7 +583,6 @@ html, body, [class*="css"] {
     transition: width 0.6s ease;
 }
 
-/* ── Keyword chip ── */
 .keyword-chip {
     display: inline-block;
     background: rgba(79,110,247,0.08);
@@ -625,14 +594,10 @@ html, body, [class*="css"] {
     margin: 3px;
 }
 
-/* Hide Streamlit branding ── */
 #MainMenu, footer, header { visibility: hidden; }
 </style>
 """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
-# MATPLOTLIB THEME
-# ─────────────────────────────────────────────
 plt.rcParams.update({
     'figure.facecolor': '#0F1526',
     'axes.facecolor': '#0F1526',
@@ -648,9 +613,6 @@ plt.rcParams.update({
     'font.size': 10,
 })
 
-# ─────────────────────────────────────────────
-# DATABASE
-# ─────────────────────────────────────────────
 conn = sqlite3.connect("reviews.db", check_same_thread=False)
 cursor = conn.cursor()
 cursor.execute("""
@@ -664,10 +626,6 @@ conn.commit()
 cursor.execute("INSERT OR IGNORE INTO users VALUES ('admin','admin123','admin')")
 conn.commit()
 
-
-# ─────────────────────────────────────────────
-# LANDING PAGE
-# ─────────────────────────────────────────────
 def landing_page():
     col_left, col_right = st.columns([8, 2])
     with col_right:
@@ -734,10 +692,6 @@ def landing_page():
             </div>
             """, unsafe_allow_html=True)
 
-
-# ─────────────────────────────────────────────
-# AUTH PAGE
-# ─────────────────────────────────────────────
 def auth_page():
     st.markdown("""
     <div style="text-align:center; margin: 3rem 0 2rem;">
@@ -785,10 +739,6 @@ def auth_page():
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-
-# ─────────────────────────────────────────────
-# ANALYZE PAGE
-# ─────────────────────────────────────────────
 def analyze_review_page():
     st.markdown("""
     <div class="page-title-block">
@@ -893,9 +843,6 @@ def analyze_review_page():
             </div>
             """, unsafe_allow_html=True)
 
-# ─────────────────────────────────────────────
-# CUSTOM DATASET DASHBOARD
-# ─────────────────────────────────────────────
 def custom_dataset_page():
     st.markdown("""
     <div class="page-title-block">
@@ -904,7 +851,6 @@ def custom_dataset_page():
     </div>
     """, unsafe_allow_html=True)
 
-    # ── Upload zone ──
     uploaded_file = st.file_uploader("Upload CSV File", type=["csv"], label_visibility="collapsed")
 
     if not uploaded_file:
@@ -925,8 +871,6 @@ def custom_dataset_page():
 
     numeric_cols     = df.select_dtypes(include=np.number).columns.tolist()
     categorical_cols = df.select_dtypes(include='object').columns.tolist()
-
-    # ── Detect possible date columns ──
     possible_dates = []
     for col in df.columns:
         try:
@@ -942,9 +886,6 @@ def custom_dataset_page():
     missing_pct = f"{missing / (total * n_cols) * 100:.1f}%" if total * n_cols > 0 else "0%"
     completeness = f"{100 - missing / (total * n_cols) * 100:.1f}%" if total * n_cols > 0 else "100%"
 
-    # ════════════════════════════════════════
-    # KPI ROW
-    # ════════════════════════════════════════
     c1, c2, c3, c4, c5 = st.columns(5)
     c1.metric("Total Rows",        f"{total:,}")
     c2.metric("Columns",           f"{n_cols}")
@@ -954,9 +895,6 @@ def custom_dataset_page():
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # DATA QUALITY STRIP
-    # ════════════════════════════════════════
     st.markdown('<p class="section-header">Data Quality Overview</p>', unsafe_allow_html=True)
     st.markdown('<div class="chart-card">', unsafe_allow_html=True)
 
@@ -991,9 +929,6 @@ def custom_dataset_page():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # CATEGORICAL DISTRIBUTION  (like Sentiment Breakdown + Share)
-    # ════════════════════════════════════════
     if categorical_cols:
         st.markdown('<p class="section-header">Category Distribution</p>', unsafe_allow_html=True)
 
@@ -1048,9 +983,6 @@ def custom_dataset_page():
             st.pyplot(fig_p, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # GROUP ANALYSIS  (like Product Performance table + heatmap)
-    # ════════════════════════════════════════
     if len(categorical_cols) >= 2:
         st.markdown('<p class="section-header">Group Analysis</p>', unsafe_allow_html=True)
 
@@ -1084,7 +1016,6 @@ def custom_dataset_page():
             st.pyplot(fig_h, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # Stacked bar below
         st.markdown('<div class="chart-card">', unsafe_allow_html=True)
         st.markdown('<p style="font-size:0.78rem;text-transform:uppercase;letter-spacing:0.08em;color:#6378C3;margin:0 0 0.8rem;">Stacked Composition</p>', unsafe_allow_html=True)
         fig_s, ax_s = plt.subplots(figsize=(12, 3.8))
@@ -1105,9 +1036,6 @@ def custom_dataset_page():
         st.pyplot(fig_s, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # NUMERIC DISTRIBUTION  (like Confidence Score histogram)
-    # ════════════════════════════════════════
     if numeric_cols:
         st.markdown('<p class="section-header">Numeric Column Distribution</p>', unsafe_allow_html=True)
 
@@ -1147,9 +1075,6 @@ def custom_dataset_page():
             """ for label, val in stats)
             st.markdown(f'<div style="margin-top:0.5rem;">{pills_html}</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # CORRELATION MATRIX  (like Heatmap)
-    # ════════════════════════════════════════
     if len(numeric_cols) > 1:
         st.markdown('<p class="section-header">Correlation Matrix</p>', unsafe_allow_html=True)
         st.markdown('<div class="chart-card">', unsafe_allow_html=True)
@@ -1167,9 +1092,6 @@ def custom_dataset_page():
         st.pyplot(fig_c, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # TIME TREND  (like Monthly Sentiment Trends)
-    # ════════════════════════════════════════
     if possible_dates and numeric_cols:
         st.markdown('<p class="section-header">Time Trend Analysis</p>', unsafe_allow_html=True)
 
@@ -1208,7 +1130,6 @@ def custom_dataset_page():
         st.pyplot(fig_t, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # If there's also a categorical column, overlay groups like the main dashboard
         if categorical_cols:
             group_overlay = st.selectbox("Break trend down by category (optional)",
                                          ["— None —"] + categorical_cols, key="trend_grp")
@@ -1233,9 +1154,6 @@ def custom_dataset_page():
                 st.pyplot(fig_tg, use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # TEXT WORD CLOUD  (like Keyword Insights)
-    # ════════════════════════════════════════
     text_cols = [c for c in categorical_cols
                  if df[c].dropna().apply(lambda x: len(str(x).split()) > 2).mean() > 0.3]
     if text_cols:
@@ -1246,7 +1164,6 @@ def custom_dataset_page():
 
         col_wc, col_freq = st.columns([1, 1], gap="large")
 
-        # Word frequencies
         words_series = pd.Series(all_text.lower().split())
         stopwords_basic = {'the','a','an','and','or','but','in','on','at','to','for',
                            'of','is','it','its','this','that','with','as','are','was',
@@ -1289,9 +1206,6 @@ def custom_dataset_page():
             st.pyplot(fig_kw, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-    # ════════════════════════════════════════
-    # DATA PREVIEW + EXPORT
-    # ════════════════════════════════════════
     with st.expander("📋 View Dataset Preview"):
         st.dataframe(df.head(20), use_container_width=True)
 
@@ -1304,9 +1218,7 @@ def custom_dataset_page():
         summary = df.describe(include='all').T.reset_index()
         st.download_button("⬇ Download Summary Stats", summary.to_csv(index=False),
                            "summary_stats.csv", "text/csv", use_container_width=True)
-# ─────────────────────────────────────────────
-# SESSION ROUTING
-# ─────────────────────────────────────────────
+
 if "page" not in st.session_state:
     st.session_state["page"] = "landing"
 
@@ -1317,12 +1229,6 @@ if st.session_state["page"] == "landing":
 if "logged_in" not in st.session_state:
     auth_page()
     st.stop()
-
-
-
-# ─────────────────────────────────────────────
-# SIDEBAR (Post-login)
-# ─────────────────────────────────────────────
 username = st.session_state.get("username", "User")
 initials = username[:2].upper()
 
@@ -1355,10 +1261,6 @@ page = st.sidebar.radio(
     label_visibility="collapsed"
 )
 
-
-# ─────────────────────────────────────────────
-# DASHBOARD
-# ─────────────────────────────────────────────
 if page == "Dashboard":
 
     @st.cache_data
@@ -1416,7 +1318,6 @@ if page == "Dashboard":
     else:
         filtered_df = pd.DataFrame()
 
-    # ── Page Header ──
     st.markdown("""
     <div class="page-title-block">
         <h1>Feedback Dashboard</h1>
@@ -1432,7 +1333,6 @@ if page == "Dashboard":
         neg   = len(filtered_df[filtered_df['sentiment'] == 'Negative'])
         neu   = len(filtered_df[filtered_df['sentiment'] == 'Neutral'])
 
-        # ── KPI Row ──
         c1, c2, c3, c4 = st.columns(4)
         c1.metric("Total Reviews",   f"{total:,}")
         c2.metric("Positive",  f"{pos/total*100:.1f}%",  f"{pos:,} reviews")
@@ -1440,8 +1340,6 @@ if page == "Dashboard":
         c4.metric("Neutral",   f"{neu/total*100:.1f}%",  f"{neu:,} reviews")
 
         st.markdown("<br>", unsafe_allow_html=True)
-
-        # ── Sentiment Breakdown ──
         col_bar, col_pie = st.columns([3, 2], gap="large")
 
         with col_bar:
@@ -1488,7 +1386,6 @@ if page == "Dashboard":
                 st.pyplot(fig2, use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
 
-        # ── Product Performance ──
         st.markdown('<p class="section-header" style="margin-top:0.5rem;">Product Performance</p>', unsafe_allow_html=True)
         col_table, col_heat = st.columns([1, 1], gap="large")
         product_stats = filtered_df.groupby('product')['sentiment'].value_counts().unstack(fill_value=0)
@@ -1512,7 +1409,6 @@ if page == "Dashboard":
             st.pyplot(fig3, use_container_width=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # ── Monthly Trends ──
         st.markdown('<p class="section-header">Monthly Sentiment Trends</p>', unsafe_allow_html=True)
         st.markdown('<div class="chart-card">', unsafe_allow_html=True)
         filtered_df['Month'] = filtered_df['date'].dt.to_period('M').astype(str)
@@ -1537,7 +1433,6 @@ if page == "Dashboard":
         st.pyplot(fig4, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # ── Keywords ──
         if not keywords_df.empty:
             st.markdown('<p class="section-header">Keyword Insights</p>', unsafe_allow_html=True)
             col_kw1, col_kw2 = st.columns([1, 1], gap="large")
@@ -1576,7 +1471,6 @@ if page == "Dashboard":
                 st.pyplot(fig6, use_container_width=True)
                 st.markdown('</div>', unsafe_allow_html=True)
 
-        # ── Confidence Distribution ──
         st.markdown('<p class="section-header">Confidence Score Distribution</p>', unsafe_allow_html=True)
         st.markdown('<div class="chart-card">', unsafe_allow_html=True)
         fig7, ax7 = plt.subplots(figsize=(12, 3.5))
@@ -1590,11 +1484,9 @@ if page == "Dashboard":
         st.pyplot(fig7, use_container_width=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
-        # ── Data Preview ──
         with st.expander("📋 View Filtered Data Preview"):
             st.dataframe(filtered_df.head(20), use_container_width=True)
 
-        # ── Export ──
         st.markdown('<p class="section-header" style="margin-top:0.5rem;">Export</p>', unsafe_allow_html=True)
         c_dl1, c_dl2, _ = st.columns([1, 1, 2])
         with c_dl1:
@@ -1605,18 +1497,12 @@ if page == "Dashboard":
                 st.download_button("⬇ Keyword Insights", keywords_df.to_csv(index=False),
                                    "Keyword_Insights.csv", "text/csv", use_container_width=True)
 
-# ─────────────────────────────────────────────
-# ANALYZE PAGE
-# ─────────────────────────────────────────────
 elif page == "Analyze Review":
     analyze_review_page()
     
 elif page == "Custom Dataset":
     custom_dataset_page()
 
-# ─────────────────────────────────────────────
-# SIDEBAR LOGOUT
-# ─────────────────────────────────────────────
 st.sidebar.markdown("---")
 if st.sidebar.button("Sign Out", use_container_width=True):
     st.session_state.clear()
